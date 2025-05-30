@@ -16,7 +16,7 @@ export class TaskService {
         }
     }
 
-    static async createTask(task: Pick<Task, "titulo" | "status">): Promise<TaskCreatedAndUpdateResponse> {
+    static async createTask(task: Pick<Task, "titulo" | "status" | "descripcion">): Promise<TaskCreatedAndUpdateResponse> {
         try {
             const response = await fetch(`${import.meta.env.VITE_SERVICE_URL}/tasks`, {
                 method: 'POST',

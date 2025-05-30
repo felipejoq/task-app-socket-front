@@ -8,6 +8,8 @@ import { TaskEvent } from "./tasks/types/task.events";
 import { toast } from "sonner";
 
 function App() {
+  const [titulo, setTitulo] = useState("");
+  const [descripcion, setDescripcion] = useState("");
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
   const [isConnected, setIsConnected] = useState(socket.connected);
@@ -34,9 +36,9 @@ function App() {
       console.log("Tarea creada:", task.id);
     }
 
-    function onDeleteTask(taskId: number) {
-      setTasks(tasks => tasks.filter(t => t.id !== taskId));
-      console.log("Tarea eliminada:", taskId);
+    function onDeleteTask(task: Task) {
+      setTasks(tasks => tasks.filter(t => t.id !== task.id));
+      console.log("Tarea eliminada:", task.id);
     }
 
     socket.on('connect', onConnect);
@@ -63,10 +65,9 @@ function App() {
         console.error("Error al obtener las tareas:", error);
       })
       .finally(() => setLoading(false));
-  }, [tasks]);
+  }, []);
 
-  const [titulo, setTitulo] = useState("");
-  const [descripcion, setDescripcion] = useState("");
+
 
   const toggleStatus = (task: Task) => {
     TaskService.toggleStatus(task)
@@ -93,7 +94,7 @@ function App() {
     e.preventDefault();
     if (!titulo.trim()) return;
 
-    TaskService.createTask({ titulo, status: "pendiente" })
+    TaskService.createTask({ titulo, status: "pendiente", descripcion })
       .then(response => {
         toast(response.result.message || "Tarea creada exitosamente");
       })
